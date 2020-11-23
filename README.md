@@ -1,1 +1,1 @@
-# face-detection-with-multiple-methods
+# Facial-recognition-with-multiple-methods
