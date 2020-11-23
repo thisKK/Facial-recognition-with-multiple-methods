@@ -4,7 +4,7 @@ import dlib
 import os
 import pickle
 
-path = '../face_detection/faces/tmp/'
+path = '../face_detection_reatinaface/faces/tmp/'
 
 detector = dlib.get_frontal_face_detector()
 sp = dlib.shape_predictor('../facialLandmarks/shape_predictor_68_face_landmarks.dat')

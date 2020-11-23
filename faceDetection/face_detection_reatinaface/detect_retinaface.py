@@ -3,14 +3,13 @@ import numpy as np
 import os
 import time
 import pickle
-
 from faceDetection import RetinaFace
+
 filename = 'trump.jpg'
-#model = 'resnet50'
-model = 'mobilenet0.25'
+model = 'resnet50'
 name = 'retinaFace'
 scale = '1'
-raw_img = cv2.imread(os.path.join('../faceDetection/examples/', filename))
+raw_img = cv2.imread(os.path.join('../../testImage/', filename))
 CONFIDENCE = 0.1
 count = 0
 

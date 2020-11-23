@@ -1,2 +1,2 @@
-from .face_detection.detector import RetinaFace
-from .face_detection._version import __version__
+from .face_detection_reatinaface.detector import RetinaFace
+from .face_detection_reatinaface._version import __version__

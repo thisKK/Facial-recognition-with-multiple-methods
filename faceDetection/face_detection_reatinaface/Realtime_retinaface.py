@@ -3,7 +3,7 @@ import numpy as np
 from faceDetection import RetinaFace
 model = 'resnet50'
 # model = 'mobilenet0.25'
-cap = cv2.VideoCapture('../testVideo/classroom.mp4')
+cap = cv2.VideoCapture('../../testVideo/classroom.mp4')
 
 if __name__ == "__main__":
     while True:
@@ -11,7 +11,6 @@ if __name__ == "__main__":
         _, frame = cap.read()
         #gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         faces = detector(frame)
-        print(faces)
         for box, landmarks, score in faces:
             box = box.astype(np.int)
             cv2.rectangle(frame, (box[0], box[1]), (box[2], box[3]), color=(255, 0, 0), thickness=1)
