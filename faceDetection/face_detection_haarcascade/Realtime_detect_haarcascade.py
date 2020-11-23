@@ -1,9 +1,9 @@
 import cv2
 import dlib
 
-face_detector = cv2.CascadeClassifier('../haarcascade/haarcascade_frontalface_default.xml')
+face_detector = cv2.CascadeClassifier('./haarcascade/haarcascade_frontalface_default.xml')
 detector = dlib.get_frontal_face_detector()
-cap = cv2.VideoCapture('../TestVideo/maskoff.mp4')
+cap = cv2.VideoCapture('../../testVideo/maskoff.mp4')
 while True:
     _, frame = cap.read()
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)

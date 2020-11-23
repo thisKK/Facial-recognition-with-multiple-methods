@@ -3,16 +3,18 @@ import os
 import time
 import numpy as np
 
-filename = 'trump.jpg'
-model = 'yolov3-face'
 scale = 1
 IMG_WIDTH, IMG_HEIGHT = 416, 416
 CONFIDENCE = 0.5
 THRESH = 0.3
 
-YoloConfig = 'yolov3-face.cfg'
-YoloWeight = 'yolov3-face.weights'
-net = cv2.dnn.readNetFromDarknet(cfgFile=os.path.join('Yolo/yolo_models', YoloConfig), darknetModel=os.path.join('Yolo/yolo_weights', YoloWeight))
+filename = 'trump.jpg'
+model = 'yolov3-face'
+
+YoloConfig = 'Yolo/yolo_models/yolov3-face.cfg'
+YoloWeight = 'Yolo/yolo_weights/yolov3-face.weights'
+
+net = cv2.dnn.readNetFromDarknet(YoloConfig, YoloWeight)
 net.setPreferableBackend(cv2.dnn.DNN_BACKEND_OPENCV)
 net.setPreferableTarget(cv2.dnn.DNN_TARGET_CPU)
 

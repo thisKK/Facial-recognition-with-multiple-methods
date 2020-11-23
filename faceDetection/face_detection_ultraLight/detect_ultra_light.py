@@ -41,11 +41,11 @@ def predict(width, height, confidences, boxes, prob_threshold, iou_threshold=0.5
     return picked_box_probs[:, :4].astype(np.int32), np.array(picked_labels), picked_box_probs[:, 4]
 
 
-filename = 'test8.jpg'
+filename = 'trump.jpg'
 model = 'ultra-light'
 scale = 1
 
-onnx_path = 'model/UltraLight/models/ultra_light_640.onnx'
+onnx_path = 'UltraLight/models/ultra_light_640.onnx'
 onnx_model = onnx.load(onnx_path)
 onnx.checker.check_model(onnx_model)
 onnx.helper.printable_graph(onnx_model.graph)
@@ -54,7 +54,7 @@ ort_session = ort.InferenceSession(onnx_path)
 
 input_name = ort_session.get_inputs()[0].name
 
-raw_img = cv2.imread(os.path.join('TestImg', filename))
+raw_img = cv2.imread(os.path.join('../../testImage/', filename))
 h, w, _ = raw_img.shape
 img = cv2.cvtColor(raw_img, cv2.COLOR_BGR2RGB)
 img = cv2.resize(img, (640, 480))

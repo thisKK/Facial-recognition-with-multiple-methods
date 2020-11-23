@@ -13,9 +13,9 @@ import onnx
 import onnxruntime as ort
 from onnx_tf.backend import prepare
 
-video_capture = cv2.VideoCapture('./TestVideo/maskon.mp4')
+video_capture = cv2.VideoCapture('../../testVideo/maskon.mp4')
 
-onnx_path = 'model/UltraLight/models/ultra_light_640.onnx'
+onnx_path = 'UltraLight/models/ultra_light_640.onnx'
 onnx_model = onnx.load(onnx_path)
 predictor = prepare(onnx_model)
 ort_session = ort.InferenceSession(onnx_path)

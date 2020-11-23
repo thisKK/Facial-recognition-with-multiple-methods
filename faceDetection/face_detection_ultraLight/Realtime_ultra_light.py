@@ -1,18 +1,13 @@
-# -*- coding: utf-8 -*-
-# @Author: fyr91
-# @Date:   2019-10-22 15:05:15
-# @Last Modified by:   fyr91
-# @Last Modified time: 2019-10-31 12:38:02
 import cv2
 from box_utils import *
-
 import onnx
 import onnxruntime as ort
 from onnx_tf.backend import prepare
+import numpy as np
 
-video_capture = cv2.VideoCapture('../TestVideo/maskoff.mp4')
+video_capture = cv2.VideoCapture('../../testVideo/maskoff.mp4')
 
-onnx_path = '../model/UltraLight/models/ultra_light_640.onnx'
+onnx_path = 'UltraLight/models/ultra_light_640.onnx'
 onnx_model = onnx.load(onnx_path)
 predictor = prepare(onnx_model)
 ort_session = ort.InferenceSession(onnx_path)

@@ -1,18 +1,13 @@
-# -*- coding: utf-8 -*-
-# @Author: User
-# @Date:   2019-10-16 17:28:22
-# @Last Modified by:   fyr91
-# @Last Modified time: 2019-10-31 11:51:05
 import face_recognition
 import cv2
 import os
 import time
 
-filename = 'test8.jpg'
+filename = 'trump.jpg'
 model = 'hog'
 scale = 1
 
-raw_img = cv2.imread(os.path.join('TestImg', filename))
+raw_img = cv2.imread(os.path.join('../../testImage/', filename))
 img = raw_img[:, :, ::-1]
 #img = cv2.cvtColor(raw_img, cv2.COLOR_GRAY2RGB)
 

@@ -1,19 +1,14 @@
-# -*- coding: utf-8 -*-
-# @Author: User
-# @Date:   2019-10-17 12:18:50
-# @Last Modified by:   fyr91
-# @Last Modified time: 2019-10-31 11:46:21
 import os
 import cv2
 import time
 from faced import FaceDetector
 
-filename = 'test.jpg'
+filename = 'trump.jpg'
 model = 'faced'
 scale = 1
 
 detector = FaceDetector()
-raw_img = cv2.imread(os.path.join('TestImg', filename))
+raw_img = cv2.imread(os.path.join('../../testImage/', filename))
 img = cv2.cvtColor(raw_img, cv2.COLOR_BGR2RGB)
 
 t0 = time.time()

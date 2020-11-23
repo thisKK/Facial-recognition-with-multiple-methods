@@ -3,7 +3,7 @@
 #Weight
 /faceDetection/face_detection_yolov3/Yolo/
 /faceDetection/face_detection_reatinaface/weights/
-/faceDetection/face_detection_ultraLight/models/
+/faceDetection/face_detection_ultraLight/UltraLight/models/
 /faceDetection/face_detection_haarcascade/haarcascade/
 ### Images ###
 # JPEG

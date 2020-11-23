@@ -8,12 +8,15 @@ IMG_WIDTH, IMG_HEIGHT = 416, 416
 CONFIDENCE = 0.2
 THRESH = 0.3
 
-net = cv2.dnn.readNetFromDarknet("../Yolo/yolo_models/yolov3-face.cfg", "../Yolo/yolo_weights/yolov3-face.weights")
+YoloConfig = 'Yolo/yolo_models/yolov3-face.cfg'
+YoloWeight = 'Yolo/yolo_weights/yolov3-face.weights'
+
+net = cv2.dnn.readNetFromDarknet(YoloConfig, YoloWeight)
+
 net.setPreferableBackend(cv2.dnn.DNN_BACKEND_OPENCV)
 net.setPreferableTarget(cv2.dnn.DNN_TARGET_CPU)
-cap = cv2.VideoCapture('../TestVideo/maskon.mp4')
+cap = cv2.VideoCapture('../../testVideo/maskon.mp4')
 while True:
-
         has_frame, frame = cap.read()
 
         # Stop the program if reached end of video
@@ -44,9 +47,10 @@ while True:
         for (i, (txt, val)) in enumerate(info):
             text = '{}: {}'.format(txt, val)
             # fps = cap.get(cv2.CAP_PROP_FPS)
-            # cv2.putText(frame, str(cap.get(cv2.CAP_PROP_FPS)), (200,100), cv2.FONT_HERSHEY_COMPLEX, 0.7, (255, 255, 255), 2)
+            cv2.putText(frame, str(cap.get(cv2.CAP_PROP_FPS)), (200,100), cv2.FONT_HERSHEY_COMPLEX, 0.7, (255, 255, 255), 2)
             cv2.putText(frame, text, (10, (i * 20) + 20),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.7, COLOR_RED, 2)
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 0, 0), 2)
+
         wind_name = 'face detection using YOLOv3'
         cv2.imshow(wind_name, frame)
 
@@ -54,7 +58,7 @@ while True:
         if key == 27 or key == ord('q'):
             print('[i] ==> Interrupted by user!')
             break
-q
+
 print('==> All done!')
 print('***********************************************************')
 cap.release()
