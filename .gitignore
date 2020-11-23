@@ -340,4 +340,4 @@ pip-selfcheck.json
 *.webm
 
 # End of https://www.toptal.com/developers/gitignore/api/pycharm,python,images,video,venv
-find . -size +100M | cat >> .gitignore
+find . -size +50M | cat >> .gitignore
