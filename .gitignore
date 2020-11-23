@@ -1,6 +1,10 @@
 # Created by https://www.toptal.com/developers/gitignore/api/pycharm,python,images,video,venv
 # Edit at https://www.toptal.com/developers/gitignore?templates=pycharm,python,images,video,venv
-
+#Weight
+/faceDetection/face_detection_yolov3/Yolo/
+/faceDetection/face_detection_reatinaface/weights/
+/faceDetection/face_detection_ultraLight/models/
+/faceDetection/face_detection_haarcascade/haarcascade/
 ### Images ###
 # JPEG
 *.jpg
