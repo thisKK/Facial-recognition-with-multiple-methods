@@ -14,11 +14,11 @@ model = dlib.face_recognition_model_v1('../faceRecognition/dlib_face_recognition
 # ---------- load face bank  --------------------------
 FACE_DESC, FACE_NAME = pickle.load(open('../faceRecognition/tempmodel/trainset.pk', 'rb'))
 
-# ---------- read video --------------------------
+# ---------- read Video --------------------------
 # cap = cv2.VideoCapture('0') #read from web camera
 cap = cv2.VideoCapture('../testVideo/test2.mp4')
 
-# ---------- write out video result -----------------
+# ---------- write out Video result -----------------
 fourcc = cv2.VideoWriter_fourcc(*'MP4V')
 out = cv2.VideoWriter('output.mp4', fourcc, 15.0, (1920, 1080))
 cap.set(3, 1920)

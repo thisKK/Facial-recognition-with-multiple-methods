@@ -20,10 +20,10 @@ class RetinaFace:
     def __init__(
         self,
         gpu_id=0,
-        # model_path=relative("weights/mobilenet0.25_Final.pth"),
-        # network="mobilenet",
-        model_path=relative("weights/Resnet50_Final.pth"),
-        network="resnet50",
+        model_path=relative("weights/mobilenet0.25_Final.pth"),
+        network="mobilenet",
+        # model_path=relative("weights/Resnet50_Final.pth"),
+        # network="resnet50",
     ):
         self.gpu_id = gpu_id
         self.device = (

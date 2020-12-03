@@ -19,7 +19,7 @@ cap = cv2.VideoCapture('../../testVideo/maskon.mp4')
 while True:
         has_frame, frame = cap.read()
 
-        # Stop the program if reached end of video
+        # Stop the program if reached end of Video
         if not has_frame:
             print('[i] ==> Done processing!!!')
             cv2.waitKey(1000)
