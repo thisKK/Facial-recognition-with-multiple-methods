@@ -8,6 +8,7 @@ from faceDetection.face_detection_reatinaface.detector import RetinaFace
 
 path = '../widerface/wider/WIDER_val/images'
 out_file = '../widerface/wider/WIDER_prediction'
+
 model = 'resnet50'
 count = 0
 CONFIDENCE = 0.5
@@ -22,6 +23,7 @@ if __name__ == "__main__":
             t0 = time.time()
             faces = detector(raw_img)
             t1 = time.time()
+
             prediction_file = os.path.join(out_file, folder_name, fn.replace('jpg', 'txt'))
             box2 = []
             name = fn.split('.')
@@ -32,9 +34,6 @@ if __name__ == "__main__":
             for box, landmarks, score in faces:
                 box = box.astype(np.int)
                 if score.astype(np.float) > CONFIDENCE:
-                    # with open(prediction_file, 'a') as f:
-                        # f.write("%s %g %d %d %d %d\n" % (str('face'), score, box[0], box[1], box[2] - box[0], box[3] - box[1]))
-                        # f.write("%d %d %d %d %g\n" % (box[0], box[1], box[2] - box[0], box[3] - box[1], score)) #for wider face
                     # cv2.rectangle(raw_img, (box[0], box[1]), (box[2], box[3]), color=(255, 0, 0), thickness=1)
                     b = (box, score)
                     box2.append(b)
