@@ -31,6 +31,7 @@ if __name__ == "__main__":
             with open(prediction_file, 'w') as f:
                 f.write("%s\n" % str(name))
             time.sleep(0.001)
+
             for box, landmarks, score in faces:
                 box = box.astype(np.int)
                 if score.astype(np.float) > CONFIDENCE:
