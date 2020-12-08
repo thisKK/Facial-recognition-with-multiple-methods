@@ -45,8 +45,8 @@ if __name__ == "__main__":
             confidences = []
             class_ids = []
             box2 = []
-            for out in outs:
 
+            for out in outs:
                 for detection in out:
                     scores = detection[5:]
                     class_id = np.argmax(scores)

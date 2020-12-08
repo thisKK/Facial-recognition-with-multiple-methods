@@ -4,7 +4,6 @@ import cv2
 import time
 
 from numba import prange
-
 from faceDetection.face_detection_DSFD import face_detection
 
 
@@ -15,10 +14,13 @@ def draw_faces(im, bboxes):
 
 
 if __name__ == "__main__":
+
     path = '../widerface/wider/WIDER_val/images'
     out_file = '../widerface/wider/WIDER_prediction_DSFD'
     impaths = glob.glob(os.path.join(path, "*.jpg"))
     CONFIDENCE = 0.5
+    LABELS = 'face'
+
     detector = face_detection.build_detector(
         "DSFDDetector",
         max_resolution=1080
@@ -26,6 +28,7 @@ if __name__ == "__main__":
     for dir in os.listdir(path):
         os.mkdir(os.path.join(out_file, dir))
         print("Processing:", dir)
+
         for fn in os.listdir(os.path.join(path, dir)):
             raw_img = cv2.imread(os.path.join(path, dir, fn))
             t0 = time.time()
@@ -34,6 +37,7 @@ if __name__ == "__main__":
             prediction_file = os.path.join(out_file, dir, fn.replace('jpg', 'txt'))
             name = fn.split('.')
             name = name[0]
+
             with open(prediction_file, 'w') as f:
                 f.write("%s\n" % str(name))
             time.sleep(0.001)
@@ -51,6 +55,7 @@ if __name__ == "__main__":
                 with open(prediction_file, 'a') as f:
                     f.write("%d %d %d %d %g\n" % (box[0], box[1], box[2] - box[0], box[3] - box[1], score))
                 time.sleep(0.001)
+            print("Process Image" + " " + fn)
             # while True:
             #     cv2.imshow('IMG', raw_img)
             #     time.sleep(1000)

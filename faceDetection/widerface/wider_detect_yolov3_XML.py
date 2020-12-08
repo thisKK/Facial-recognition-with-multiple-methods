@@ -1,4 +1,5 @@
 import cv2
+from cv2 import dnn
 import os
 import time
 import numpy as np
@@ -19,7 +20,7 @@ def generateXML(filename,outputPath,w,h,d,boxes):
     childFilename = ET.SubElement(top, 'filename')
     childFilename.text = filename[0:filename.rfind(".")]
     childPath = ET.SubElement(top, 'path')
-    childPath.text = outputPath + "/" + filename
+    childPath.text = outputPath
     childSource = ET.SubElement(top, 'source')
     childDatabase = ET.SubElement(childSource, 'database')
     childDatabase.text = 'Unknown'
@@ -59,79 +60,83 @@ def generateXML(filename,outputPath,w,h,d,boxes):
     return prettify(top)
 
 
+model = 'Yolov3'
 
-# filename = 'obama.jpg'
-model = 'yolov3-face'
-path = '../data/29--Students_Schoolkids/'
-scale = 1
-IMG_WIDTH, IMG_HEIGHT = 416, 416
+path = '../widerface/wider/WIDER_val/images'
+out_file = '../widerface/wider/WIDER_prediction'
+
+YoloConfig = '../face_detection_yolov3/Yolo/yolo_models/yolov3-face.cfg'
+YoloWeight = '../face_detection_yolov3/Yolo/yolo_weights/yolov3-face.weights'
+
+count = 0
 CONFIDENCE = 0.5
 THRESH = 0.3
+IMG_WIDTH, IMG_HEIGHT = 416, 416
 LABELS = 'face'
-output_filepath = '../data'
 
-net = cv2.dnn.readNetFromDarknet("../Yolo/yolo_models/yolov3-face.cfg", "../Yolo/yolo_weights/yolov3-face.weights")
+net = cv2.dnn.readNetFromDarknet(YoloConfig, YoloWeight)
 net.setPreferableBackend(cv2.dnn.DNN_BACKEND_OPENCV)
 net.setPreferableTarget(cv2.dnn.DNN_TARGET_CPU)
+if __name__ == "__main__":
+    for dir in os.listdir(path):
+        folder_name = dir
+        os.mkdir(os.path.join(out_file, folder_name))
+        print(folder_name)
 
+        for fn in os.listdir(os.path.join(path, folder_name)):
+            raw_img = cv2.imread(os.path.join(path, folder_name, fn))
+            h, w, d = raw_img.shape
+            blob = cv2.dnn.blobFromImage(raw_img, 1 / 255, (IMG_WIDTH, IMG_HEIGHT), [0, 0, 0], 1, crop=False)
+            net.setInput(blob)
+            layers_names = net.getLayerNames()
+            outs = net.forward([layers_names[i[0] - 1] for i in net.getUnconnectedOutLayers()])
 
-for fn in os.listdir(path):
-    filename = fn
-    raw_img = cv2.imread(os.path.join(path, filename))
-    out_file = '../data'
-    h, w, _ = raw_img.shape
-    wI, hI, d = raw_img.shape
-    name = fn.split('.')
-    name = name[0]
-    out_file = os.path.join(out_file, name.replace('jpg', 'xml'))
-    count = 0
-    # inference
-    t0 = time.time()
+            prediction_file = os.path.join(out_file, folder_name, fn.replace('jpg', 'xml'))
 
-    blob = cv2.dnn.blobFromImage(raw_img, 1/255, (IMG_WIDTH, IMG_HEIGHT), [0, 0, 0], 1, crop=False)
-    net.setInput(blob)
-    layers_names = net.getLayerNames()
-    outs = net.forward([layers_names[i[0] - 1] for i in net.getUnconnectedOutLayers()])
+            blob = cv2.dnn.blobFromImage(raw_img, 1/255, (IMG_WIDTH, IMG_HEIGHT), [0, 0, 0], 1, crop=False)
+            net.setInput(blob)
+            layers_names = net.getLayerNames()
+            outs = net.forward([layers_names[i[0] - 1] for i in net.getUnconnectedOutLayers()])
 
-    boxes = []
-    confidences = []
-    class_ids = []
-    for out in outs:
-        for detection in out:
-            scores = detection[5:]
-            class_id = np.argmax(scores)
-            confidence = scores[class_id]
-            # only face
-            if confidence > CONFIDENCE and class_id == 0:
-                box = detection[0:4] * np.array([w, h, w, h])
-                centerX, centerY, bwidth, bheight = box.astype('int')
-                x = int(centerX - (bwidth / 2))
-                y = int(centerY - (bheight / 2))
-                boxes.append([x, y, int(bwidth), int(bheight)])
-                confidences.append(float(confidence))
-                class_ids.append(class_id)
-    # Apply Non-Maxima Suppression to suppress overlapping bounding boxes
-    idxs = cv2.dnn.NMSBoxes(boxes, confidences, CONFIDENCE, THRESH)
+            boxes = []
+            confidences = []
+            class_ids = []
+            box2 = []
 
-    t1 = time.time()
-    print(f"took {round(t1-t0, 3)} to get {len(idxs.flatten())} faces")
-    boxes1 = []
+            for out in outs:
+                for detection in out:
+                    scores = detection[5:]
+                    class_id = np.argmax(scores)
+                    confidence = scores[class_id]
+                    # only face
+                    if confidence > CONFIDENCE and class_id == 0:
+                        box = detection[0:4] * np.array([w, h, w, h])
+                        centerX, centerY, bwidth, bheight = box.astype('int')
+                        x = int(centerX - (bwidth / 2))
+                        y = int(centerY - (bheight / 2))
+                        boxes.append([x, y, int(bwidth), int(bheight)])
+                        confidences.append(float(confidence))
+                        class_ids.append(class_id)
+            # Apply Non-Maxima Suppression to suppress overlapping bounding boxes
+            idxs = cv2.dnn.NMSBoxes(boxes, confidences, CONFIDENCE, THRESH)
+            boxes1 = []
 
-    if boxes is None or confidences is None or idxs is None or class_ids is None:
-        raise '[ERROR] Required variables are set to None before drawing boxes on images.'
+            if boxes is None or confidences is None or idxs is None or class_ids is None:
+                raise '[ERROR] Required variables are set to None before drawing boxes on images.'
+            if len(idxs) > 0:
+                for i in idxs.flatten():
+                    x, y = boxes[i][0], boxes[i][1]
+                    w, h = boxes[i][2], boxes[i][3]
+                    box = x, y, w+x, h+y
+                    box = np.asarray(box, dtype=np.float32)
+                    if confidences[i] < CONFIDENCE:
+                        continue
+                    boxes1.append(([LABELS, box], confidences[i]))
+                    with open(prediction_file, 'w') as f:
+                        f.write(generateXML(fn, os.path.join(path, folder_name, fn), h, w, d, boxes1))
+            print("Process Image" + " " + fn)
 
-    for i in idxs.flatten():
-        x, y = boxes[i][0], boxes[i][1]
-        w, h = boxes[i][2], boxes[i][3]
-        box = x, y, w+x, h+y
-        box = np.asarray(box, dtype=np.float32)
-        if confidences[i] < CONFIDENCE:
-            continue
-        boxes1.append(([LABELS, box], confidences[i]))
-        with open(out_file + '.xml', 'w') as f:
-            f.write(generateXML(filename, output_filepath, hI, wI, d, boxes1))
-
-    # while True:
-    #     cv2.imshow('IMG', raw_img)
-    #     if cv2.waitKey(1) & 0xFF == ord('q'):
-    #         break
+            # while True:
+            #     cv2.imshow('IMG', raw_img)
+            #     if cv2.waitKey(1) & 0xFF == ord('q'):
+            #         break
