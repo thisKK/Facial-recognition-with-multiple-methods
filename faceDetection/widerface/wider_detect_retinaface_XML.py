@@ -3,7 +3,7 @@ import numpy as np
 import os
 import time
 import pickle
-from face_detection import RetinaFace
+from faceDetection.face_detection_reatinaface.detector import RetinaFace
 import xml.etree.ElementTree as ET
 from xml.dom import minidom
 from imutils import paths
@@ -23,7 +23,7 @@ def generateXML(filename,outputPath,w,h,d,boxes):
     childFilename = ET.SubElement(top, 'filename')
     childFilename.text = filename[0:filename.rfind(".")]
     childPath = ET.SubElement(top, 'path')
-    childPath.text = outputPath + "/" + filename
+    childPath.text = outputPath
     childSource = ET.SubElement(top, 'source')
     childDatabase = ET.SubElement(childSource, 'database')
     childDatabase.text = 'Unknown'
@@ -62,42 +62,42 @@ def generateXML(filename,outputPath,w,h,d,boxes):
         childYmax.text = str(ymax)
     return prettify(top)
 
-path = '../data/29--Students_Schoolkids/'
-model = 'resnet50'
-# model = 'mobilenet0.25'
-scale = '1'
-name = 'retinaFace'
-count = 0
-CONFIDENCE = 0.1
+CONFIDENCE = 0.5
 LABELS = 'face'
-output_filepath = '../data'
+
+path = '../widerface/wider/WIDER_val/images'
+out_file = '../widerface/wider/WIDER_prediction'
+model = 'resnet50'
+count = 0
+CONFIDENCE = 0.5
+
 if __name__ == "__main__":
-    for fn in os.listdir(path):
-        filename = fn
-        raw_img = cv2.imread(os.path.join(path, filename))
-        wI, hI, d = raw_img.shape
-        detector = RetinaFace()
-        out_file = '../data'
-        name = fn.split('.')
-        name = name[0]
-        out_file = os.path.join(out_file, name.replace('jpg', 'xml'))
-        t0 = time.time()
-        print('start')
-        faces = detector(raw_img)
-        t1 = time.time()
-        print(f'took {round(t1 - t0, 3)} to get {len(faces)} faces')
-        boxes1 = []
+    detector = RetinaFace(gpu_id=0)
+    for dir in os.listdir(path):
+        folder_name = dir
+        os.mkdir(os.path.join(out_file, folder_name))
+        print(folder_name)
+        for fn in os.listdir(os.path.join(path, folder_name)):
+            raw_img = cv2.imread(os.path.join(path, folder_name, fn))
+            # path_fn = os.listdir(os.path.join(path, folder_name, fn))
+            wI, hI, d = raw_img.shape
+            t0 = time.time()
+            faces = detector(raw_img)
+            t1 = time.time()
 
-        for box, landmarks, score in faces:
-            box = box.astype(np.int)
-            if score < CONFIDENCE:
-                continue
-            boxes1.append(([LABELS, box], score))
-        with open(out_file + '.xml', 'w') as f:
-            f.write(generateXML(filename, output_filepath, hI, wI, d, boxes1))
+            prediction_file = os.path.join(out_file, folder_name, fn.replace('jpg', 'xml'))
+            boxes1 = []
 
-        # while True:
-        #     cv2.imshow('IMG', raw_img)
-        #     if cv2.waitKey(1) & 0xFF == ord('q'):
-        #         break
+            for box, landmarks, score in faces:
+                box = box.astype(np.int)
+                if score < CONFIDENCE:
+                    continue
+                boxes1.append(([LABELS, box], score))
+            with open(prediction_file, 'w') as f:
+                f.write(generateXML(fn, os.path.join(path, folder_name, fn), hI, wI, d, boxes1))
+
+            # while True:
+            #     cv2.imshow('IMG', raw_img)
+            #     if cv2.waitKey(1) & 0xFF == ord('q'):
+            #         break
 
