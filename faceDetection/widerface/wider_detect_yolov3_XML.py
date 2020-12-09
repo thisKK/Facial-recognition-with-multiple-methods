@@ -132,8 +132,8 @@ if __name__ == "__main__":
                     if confidences[i] < CONFIDENCE:
                         continue
                     boxes1.append(([LABELS, box], confidences[i]))
-                    with open(prediction_file, 'w') as f:
-                        f.write(generateXML(fn, os.path.join(path, folder_name, fn), h, w, d, boxes1))
+            with open(prediction_file, 'w') as f:
+                f.write(generateXML(fn, os.path.join(path, folder_name, fn), h, w, d, boxes1))
             print("Process Image" + " " + fn)
 
             # while True:

@@ -49,18 +49,21 @@ def converter(xml_files: str, output_folder: str) -> None:
         filename_path = Path(output_folder) / filename
         xml_content = XMLHandler(xml)
         boxes = xml_content.return_boxes_class_as_dict()
-
+        with open(filename_path, "a") as file:
+            box_content = f"{file_name}\n" \
+                          f"{len(boxes)}\n"
+            file.write(box_content)
         with open(filename_path, "a") as file:
             for box_index in boxes:
                 box = boxes[box_index]
-                box_content = f"{box['name']} {box['confidence']} {box['x']} {box['y']} {box['w']} {box['h']}\n"
+                box_content = f"{box['x']} {box['y']} {box['w']} {box['h']} {box['confidence']}\n"
                 file.write(box_content)
 
     print(f"Converted {len(xml_files)} files!")
 
 
 if __name__ == '__main__':
-    XML_FOLDER = "/home/thiskk/Desktop/ResultXMLFormat/ensemble_unanimous_yolo_resnet50_DSFD_Confidence0.1"
-    OUTPUT_FOLDER = "/home/thiskk/Desktop/ResultTextFormat/ensemble_unanimous_yolo_resnet50_DSFD_Confidence0.1"
+    XML_FOLDER = "/home/thiskk/Desktop/wider/result_xml/ensumble/unanimous"
+    OUTPUT_FOLDER = "/home/thiskk/Desktop/wider/result_text/ensumble/unanimous"
 
     converter(XML_FOLDER, OUTPUT_FOLDER)
