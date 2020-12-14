@@ -1,7 +1,6 @@
 import cv2
 from cv2 import dnn
 import os
-import time
 import numpy as np
 import xml.etree.ElementTree as ET
 from xml.dom import minidom
@@ -13,14 +12,14 @@ def prettify(elem):
     reparsed = minidom.parseString(rough_string)
     return reparsed.toprettyxml(indent="  ")
 
-def generateXML(filename,outputPath,w,h,d,boxes):
+def generateXML(filename, outputpath, w, h, d, boxes):
     top = ET.Element('annotation')
     childFolder = ET.SubElement(top, 'folder')
     childFolder.text = 'images'
     childFilename = ET.SubElement(top, 'filename')
     childFilename.text = filename[0:filename.rfind(".")]
     childPath = ET.SubElement(top, 'path')
-    childPath.text = outputPath
+    childPath.text = outputpath
     childSource = ET.SubElement(top, 'source')
     childDatabase = ET.SubElement(childSource, 'database')
     childDatabase.text = 'Unknown'
@@ -33,10 +32,10 @@ def generateXML(filename,outputPath,w,h,d,boxes):
     childDepth.text = str(d)
     childSegmented = ET.SubElement(top, 'segmented')
     childSegmented.text = str(0)
-    for (box,score) in boxes:
+    for (box, score) in boxes:
         category = box[0]
         box = box[1].astype("int")
-        (x,y,xmax,ymax) = box
+        (x, y, xmax, ymax) = box
         childObject = ET.SubElement(top, 'object')
         childName = ET.SubElement(childObject, 'name')
         childName.text = category
@@ -79,25 +78,18 @@ net.setPreferableBackend(cv2.dnn.DNN_BACKEND_OPENCV)
 net.setPreferableTarget(cv2.dnn.DNN_TARGET_CPU)
 if __name__ == "__main__":
     for dir in os.listdir(path):
-        folder_name = dir
-        os.mkdir(os.path.join(out_file, folder_name))
-        print(folder_name)
+        os.mkdir(os.path.join(out_file, dir))
+        print(dir)
 
-        for fn in os.listdir(os.path.join(path, folder_name)):
-            raw_img = cv2.imread(os.path.join(path, folder_name, fn))
+        for fn in os.listdir(os.path.join(path, dir)):
+            raw_img = cv2.imread(os.path.join(path, dir, fn))
             h, w, d = raw_img.shape
             blob = cv2.dnn.blobFromImage(raw_img, 1 / 255, (IMG_WIDTH, IMG_HEIGHT), [0, 0, 0], 1, crop=False)
             net.setInput(blob)
             layers_names = net.getLayerNames()
             outs = net.forward([layers_names[i[0] - 1] for i in net.getUnconnectedOutLayers()])
 
-            prediction_file = os.path.join(out_file, folder_name, fn.replace('jpg', 'xml'))
-
-            blob = cv2.dnn.blobFromImage(raw_img, 1/255, (IMG_WIDTH, IMG_HEIGHT), [0, 0, 0], 1, crop=False)
-            net.setInput(blob)
-            layers_names = net.getLayerNames()
-            outs = net.forward([layers_names[i[0] - 1] for i in net.getUnconnectedOutLayers()])
-
+            prediction_file = os.path.join(out_file, dir, fn.replace('jpg', 'xml'))
             boxes = []
             confidences = []
             class_ids = []
@@ -121,8 +113,8 @@ if __name__ == "__main__":
             idxs = cv2.dnn.NMSBoxes(boxes, confidences, CONFIDENCE, THRESH)
             boxes1 = []
 
-            if boxes is None or confidences is None or idxs is None or class_ids is None:
-                raise '[ERROR] Required variables are set to None before drawing boxes on images.'
+            # if boxes is None or confidences is None or idxs is None or class_ids is None:
+            #     # raise '[ERROR] Required variables are set to None before drawing boxes on images.'
             if len(idxs) > 0:
                 for i in idxs.flatten():
                     x, y = boxes[i][0], boxes[i][1]
@@ -133,7 +125,7 @@ if __name__ == "__main__":
                         continue
                     boxes1.append(([LABELS, box], confidences[i]))
             with open(prediction_file, 'w') as f:
-                f.write(generateXML(fn, os.path.join(path, folder_name, fn), h, w, d, boxes1))
+                f.write(generateXML(fn, os.path.join(path, dir, fn), h, w, d, boxes1))
             print("Process Image" + " " + fn)
 
             # while True:

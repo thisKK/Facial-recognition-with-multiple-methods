@@ -27,6 +27,7 @@ if __name__ == "__main__":
             im[:, :, ::-1]
         )[:, :4]
         print(f"Detection time: {time.time()- t:.3f}")
+        print("facd found:", len(dets))
         draw_faces(im, dets)
         imname = os.path.basename(impath).split(".")[0]
         output_path = os.path.join(

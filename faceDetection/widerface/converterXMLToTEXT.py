@@ -63,7 +63,7 @@ def converter(xml_files: str, output_folder: str) -> None:
 
 
 if __name__ == '__main__':
-    XML_FOLDER = "/home/thiskk/Desktop/wider/result_xml/ensumble/unanimous"
-    OUTPUT_FOLDER = "/home/thiskk/Desktop/wider/result_text/ensumble/unanimous"
+    XML_FOLDER = "/home/thiskk/Desktop/WiderFace-Evaluation/wider/result_xml/ensumble/unanimous"
+    OUTPUT_FOLDER = "/home/thiskk/Desktop/WiderFace-Evaluation/wider/result_text/ensumble/unanimous"
 
     converter(XML_FOLDER, OUTPUT_FOLDER)

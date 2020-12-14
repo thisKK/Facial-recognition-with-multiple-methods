@@ -8,7 +8,6 @@ from faceDetection import RetinaFace
 model = 'resnet50'
 name = 'retinaFace'
 CONFIDENCE = 0.1
-count = 0
 
 def draw_faces(im, bboxes):
     for bbox in bboxes:
@@ -21,6 +20,7 @@ if __name__ == "__main__":
     detector = RetinaFace(gpu_id=0)
 
     for impath in impaths:
+        count = 0
         if impath.endswith("out.jpg"): continue
         im = cv2.imread(impath)
         print("Processing:", impath)
@@ -31,7 +31,8 @@ if __name__ == "__main__":
             if score.astype(float) < CONFIDENCE:
                 continue
             cv2.rectangle(im, (box[0], box[1]), (box[2], box[3]), color=(0, 0, 255), thickness=2)
-
+            count =count+1
+        print("face found: ", count)
         imname = os.path.basename(impath).split(".")[0]
         output_path = os.path.join(
             os.path.dirname(impath),
