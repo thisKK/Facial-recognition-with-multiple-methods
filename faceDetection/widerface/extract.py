@@ -14,8 +14,8 @@ def extract():
 
 def sortFile():
     count = 0
-    text_folder = "/home/thiskk/Desktop/WiderFace-Evaluation/wider/result_text/ensumble/affirmative"
-    output_folder = "/home/thiskk/Desktop/WiderFace-Evaluation/wider/result_text/WIDER_Ensumbel/affirmative"
+    text_folder = "/home/thiskk/Desktop/WiderFace-Evaluation/wider/result_text/ensumble0.5/affirmative"
+    output_folder = "/home/thiskk/Desktop/WiderFace-Evaluation/wider/result_text/WIDER_Ensumbel0.5/affirmative"
     for dir in os.listdir(text_folder):
         number = dir.split('_')
         number = int(number[0])
@@ -30,7 +30,7 @@ def sortFile():
         print('sorted ', count, ' files')
 
 def genarateDirWider():
-    OUTPUT = "/home/thiskk/Desktop/WiderFace-Evaluation/wider/result_text/WIDER_Ensumbel/affirmative"
+    OUTPUT = "/home/thiskk/Desktop/WiderFace-Evaluation/wider/result_text/WIDER_Ensumbel0.5/affirmative"
     path = '../widerface/wider/WIDER_val/images'
     for dir in os.listdir(path):
         folder_name = dir
@@ -38,7 +38,7 @@ def genarateDirWider():
         print(folder_name)
 
 if __name__ == '__main__':
-     extract()
+     # extract()
     # genarateDirWider()
-    # sortFile()
+    sortFile()
 

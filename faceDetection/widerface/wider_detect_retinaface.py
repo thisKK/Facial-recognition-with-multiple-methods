@@ -2,8 +2,6 @@ import cv2
 import numpy as np
 import os
 import time
-import pickle
-from face_detection import RetinaFace
 from faceDetection.face_detection_reatinaface.detector import RetinaFace
 
 path = '../widerface/wider/WIDER_val/images'
